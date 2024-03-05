@@ -4,4 +4,4 @@ To see the results look into the Notebooks for static plots showing the systems 
 
 The equations of motion were derived by building a system of OEDs using Lagrangian mechanics and solving them with SciPy's solve_ivp solver. For implementation and symbolic computation, I used Sympy.
 
-Thanks to Logan Dihel (https://www.youtube.com/@logandihel), who kindly made his code on lagrangian mechanics for an elastic pendulum public, which I partly used and adapted for my simulation.
+Thanks to Logan Dihel (https://www.youtube.com/@logandihel), who kindly made his code on lagrangian mechanics for an elastic pendulum public, which I partly used and adapted for my simulations.
