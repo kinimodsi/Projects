@@ -1,3 +1,4 @@
+# GravitySim
 These Notebooks contain simulations of gravitational between bodies. Starting with a 1D simulation of two bodies, a 2D simulation was also implemented. Hopefully, I will get to a 3D Simulation and perhaps also tackle the 3-body problem.
 
 To see the results look into the Notebooks for static plots showing the systems behaviours or play the .gif files.
