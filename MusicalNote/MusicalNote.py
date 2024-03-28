@@ -10,7 +10,7 @@ window = 1000  # window for the data
 downsample = 1  # how much samples to drop
 channels = [1]  # a list of audio channels
 interval = 30  # update interval in milliseconds for plot
-sample_duration = 10  # duration of the sample window in seconds
+sample_duration = 1  # duration of the sample window in seconds
 
 # Create a queue to store audio data
 q = queue.Queue()
@@ -32,8 +32,9 @@ lines2 = ax2.semilogx(plotdata_fft)
 ax2.set_title("Frequency Domain")
 ax2.set_xlabel("Frequency (Hz)")
 ax2.set_ylabel("Amplitude")
-ax2.set_xlim(27.5, 4187)
-ax2.set_ylim(0, 0.4)
+ax2.set_xlim(20, 4187)
+#ax2.set_ylim(0, 0.2)
+min_freq = 27
 
 note_frequencies = {
     "C8": 4186.01,
@@ -132,7 +133,9 @@ def FFT(f_time, sampling_rate):
     F_amp = np.abs(F_fft)*2
     F_amp[0] = F_amp[0]/2
     freqs = np.fft.rfftfreq(len(f_time), 1/sampling_rate)
-
+    min_freq_index = np.argmax(freqs >= min_freq)
+    F_amp[:min_freq_index] = 0
+    F_amp = F_amp*(10/freqs)
     return [F_amp, freqs]
 
 def get_note_freq(frequency):
@@ -168,7 +171,6 @@ def update_plot(frame):
     # Calculate FFT of last 2 seconds of data
     audio_data = plotdata_to_plot[:, 0]  # Taking only the first channel for FFT
     fft_amp, freqs = FFT(audio_data, samplerate)
-    
     # Update FFT plot
     lines2[0].set_data(freqs, fft_amp)
 
