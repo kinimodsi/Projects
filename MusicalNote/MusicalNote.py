@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sounddevice as sd
 
-device = 0  # id of the audio device by default
-window = 1000  # window for the data
-downsample = 1  # how much samples to drop
-channels = [1]  # a list of audio channels
-interval = 30  # update interval in milliseconds for plot
-sample_duration = 1  # duration of the sample window in seconds
+device = 0 
+window = 1000  
+downsample = 1  
+channels = [1]  
+interval = 30  
+sample_duration = 1  
 
 # Create a queue to store audio data
 q = queue.Queue()
@@ -20,11 +20,11 @@ device_info = sd.query_devices(device, 'input')
 samplerate = device_info['default_samplerate']
 length = int(window * samplerate / (1000 * downsample))
 
-# Initialize plotdata
+# Create array to store audio data
 plotdata = np.zeros((length, len(channels)))
 plotdata_fft = np.zeros(int(sample_duration*samplerate))
 
-# Create figure and axis for plotting
+# Create figure
 fig, (ax1, ax2) = plt.subplots(1, 2,figsize=(10, 4))
 ax1.set_title("Time Domaine")
 lines = ax1.plot(plotdata)
@@ -135,7 +135,7 @@ def FFT(f_time, sampling_rate):
     freqs = np.fft.rfftfreq(len(f_time), 1/sampling_rate)
     min_freq_index = np.argmax(freqs >= min_freq)
     F_amp[:min_freq_index] = 0
-    F_amp = F_amp*(10/freqs)
+    #F_amp = F_amp*(10/freqs)
     return [F_amp, freqs]
 
 def get_note_freq(frequency):
@@ -171,24 +171,16 @@ def update_plot(frame):
     # Calculate FFT of last 2 seconds of data
     audio_data = plotdata_to_plot[:, 0]  # Taking only the first channel for FFT
     fft_amp, freqs = FFT(audio_data, samplerate)
-    # Update FFT plot
     lines2[0].set_data(freqs, fft_amp)
 
     # Get the current note frequency
     current_note_freq = freqs[np.argmax(fft_amp)]
     current_note = get_note_freq(current_note_freq)
-    
-    # Update the text showing the current note
     text.set_text(f'Current Note: {current_note}, Frequency: {current_note_freq:.2f} Hz')
     
-    return lines + lines2 + [text]  # Return both sets of lines and the text object
+    return lines + lines2 + [text] 
 
-# Add text showing the current note
 text = ax2.text(0, 0.9, '', transform=ax2.transAxes)
-
-# Add grid to plot
-ax1.set_yticks([0])
-ax1.yaxis.grid(True)
 
 
 # Function for audio callback
@@ -199,9 +191,7 @@ def audio_callback(indata, frames, time, status):
 # Set up input stream
 stream = sd.InputStream(device=device, channels=max(channels), samplerate=samplerate, callback=audio_callback)
 
-# Start animation
-ani = FuncAnimation(fig, update_plot, interval=interval, blit=True)
 
-# Start input stream and show plot with FFT on the last 2 seconds of data
+ani = FuncAnimation(fig, update_plot, interval=interval, blit=True)
 with stream:
     plt.show()
