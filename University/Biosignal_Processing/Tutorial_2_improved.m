@@ -600,7 +600,7 @@ detected_error_ratio=length(label_vector_rc(label_vector_rc == 1))/length(label_
 disp(['Ratio Error / nonError: ', num2str(detected_error_ratio)]);
 
 %% Test different boosting methods:
-max_weak_classifiers = 30; % Maximum number of weak classifiers (doesnt improve after 50 max_classiferes)
+max_weak_classifiers = 20; % Maximum number of weak classifiers (doesnt improve after 50 max_classiferes)
 models_names = {"GentleBoost", "AdaBoostM1"}; % compare multiple boosting methods
 num_folds = 10; % Number of folds for cross-validation
 max_depth = 5; % max tree depht
